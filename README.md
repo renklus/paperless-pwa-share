@@ -76,7 +76,7 @@ This chapter is AI generated and not tested. See chapter 'Intended use' for test
    - **PaperlessTask → View**
 
    Get its token under *Profile → API Auth Token*. The token is stored unencrypted by the app in the browser's IndexedDB (sandboxed by Android), so a limited user keeps the damage small if the phone is compromised.
-5. **Import workflow** that sets correct permissions on every added document. The added document is owned by the dedicated paperless-pwa-share user. Only admin users can see it's documents. Create an import workflow that adds permissions for other users on the newly added documents.
+5. **Import workflow** that sets correct permissions on every added document. The added document is by default owned by the dedicated paperless-pwa-share user. Only admin users can see it's documents. Create an import workflow that adds permissions for other users on the newly added documents. Trigger: "Document Added", Action 1: "Remove owners" and select the dedicated paperless-pwa-share user., Action 2: "Assignment" and select the intended owner.
 7. **On the phone,** open the app URL in Chrome, then *Menu → Install app* (or *Add to Home screen*). It needs to be installed. A link on the home screen is not enough. If the install menu doesn't appear in Chrome, verify that it is a supported browser, OS, not an In-Private Window and the connection uses HTTPS.
 8. Open the app, enter the paperless URL and token, and tap **Save** and **Test connection**.
 9. Share a file from any app and pick **To Paperless**.
