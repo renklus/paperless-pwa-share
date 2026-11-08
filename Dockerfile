@@ -7,7 +7,7 @@ ARG APP_VERSION=dev
 ENV VITE_APP_VERSION=$APP_VERSION
 RUN npm run build
 
-FROM joseluisq/static-web-server:2.44.0
+FROM joseluisq/static-web-server:2.44.1@sha256:94618e3d17802265a21926217e6f9e7832b311b6fbf5933684001739fafed06a
 ARG APP_VERSION=dev
 LABEL org.opencontainers.image.title="paperless-pwa-share" \
       org.opencontainers.image.description="Android share-sheet PWA that uploads files to paperless-ngx" \
