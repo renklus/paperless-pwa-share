@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>paperless-pwa-share</title>
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+</head>
+<body>
+  <main>
+    <section id="settings" hidden>
+      <h1>paperless-pwa-share</h1>
+      <form id="settings-form">
+        <label>Paperless URL <input name="url" type="url" required placeholder="https://paperless.example.com"></label>
+        <label>API token <input name="token" type="password" required autocomplete="off"></label>
+        <button type="submit">Save</button>
+        <button type="button" id="test">Test connection</button>
+      </form>
+      <p id="settings-msg" role="status"></p>
+      <small>Version <span id="version"></span></small>
+    </section>
+    <section id="share" hidden>
+      <h1>Uploading</h1>
+      <ul id="files"></ul>
+      <button type="button" id="retry" hidden>Retry</button>
+      <p><a href="/">Settings</a></p>
+    </section>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

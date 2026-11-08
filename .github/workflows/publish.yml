@@ -1,0 +1,68 @@
+name: Publish
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Version without the leading v, e.g. 1.2.3 or 1.2.4-dev.17
+        required: true
+        type: string
+      prerelease:
+        required: true
+        type: boolean
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+      VITE_APP_VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Zip dist
+        run: cd dist && zip -r "../paperless-pwa-share-${VERSION}-dist.zip" .
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ inputs.version }}
+            type=raw,value=dev,enable=${{ inputs.prerelease }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.version }},enable=${{ !inputs.prerelease }}
+            type=semver,pattern={{major}},value=${{ inputs.version }},enable=${{ !inputs.prerelease }}
+            type=raw,value=latest,enable=${{ !inputs.prerelease }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          build-args: APP_VERSION=${{ inputs.version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          flag=""; [ "$PRERELEASE" = "true" ] && flag="--prerelease"
+          gh release create "v${VERSION}" "paperless-pwa-share-${VERSION}-dist.zip" \
+            --target "$GITHUB_SHA" --title "paperless-pwa-share ${VERSION}" --generate-notes $flag

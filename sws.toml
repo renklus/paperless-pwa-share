@@ -1,0 +1,23 @@
+[general]
+host = "0.0.0.0"
+port = 8080
+root = "/public"
+log-level = "info"
+cache-control-headers = false
+compression = true
+
+[[advanced.headers]]
+source = "/{sw.js,index.html,manifest.webmanifest}"
+headers = { Cache-Control = "no-cache" }
+
+[[advanced.headers]]
+source = "/assets/**"
+headers = { Cache-Control = "public, max-age=31536000, immutable" }
+
+[[advanced.headers]]
+source = "/manifest.webmanifest"
+headers = { Content-Type = "application/manifest+json" }
+
+[[advanced.headers]]
+source = "/**"
+headers = { Content-Security-Policy = "default-src 'self'; connect-src https:; img-src 'self' data:", X-Content-Type-Options = "nosniff", Referrer-Policy = "no-referrer" }

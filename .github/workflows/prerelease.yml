@@ -1,0 +1,31 @@
+name: Prerelease
+on:
+  push:
+    branches: [main]
+concurrency:
+  group: prerelease
+  cancel-in-progress: true
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: v
+        run: |
+          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' --exclude '*-*' 2>/dev/null || echo v0.0.0)
+          IFS=. read -r major minor patch <<< "${last#v}"
+          echo "version=${major}.${minor}.$((patch + 1))-dev.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+  publish:
+    needs: version
+    permissions:
+      contents: write
+      packages: write
+    uses: ./.github/workflows/publish.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+      prerelease: true
