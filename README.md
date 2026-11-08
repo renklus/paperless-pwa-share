@@ -42,7 +42,11 @@ paperless-ngx has no share-menu integration on Android ([#1955](https://github.c
    PAPERLESS_CORS_ALLOWED_HOSTS=https://share.example.com
    ```
 
-4. **Recommended: create a dedicated paperless user** with minimal permissions: *add document*, plus whatever is needed to view the status of its own consume tasks. (The exact minimal permission set has not been verified against a live instance yet; if the status check fails with 403, add the *view paperless task* permission.) Get its token under *Profile → API Auth Token*. The token is stored unencrypted by the app in the browser's IndexedDB (sandboxed by Android), so a limited user keeps the damage small if the phone is compromised.
+4. **Recommended: create a dedicated paperless user** with only the permissions the app needs:
+   - **Document → Add**
+   - **UISettings → View**
+
+   Get its token under *Profile → API Auth Token*. The token is stored unencrypted by the app in the browser's IndexedDB (sandboxed by Android), so a limited user keeps the damage small if the phone is compromised.
 5. **On the phone,** open the app URL in Chrome, then *Menu → Install app* (or *Add to Home screen*).
 6. Open the app, enter the paperless URL and token, and tap **Test connection**.
 7. Share a file from any app and pick **To Paperless**.
