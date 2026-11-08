@@ -4,6 +4,35 @@ Share files from any Android app straight into [paperless-ngx](https://docs.pape
 
 paperless-ngx has no share-menu integration on Android ([#1955](https://github.com/paperless-ngx/paperless-ngx/discussions/1955), [#8263](https://github.com/paperless-ngx/paperless-ngx/discussions/8263)). paperless-pwa-share is a small, purely client-side progressive web app. Install it once in Chrome, save your paperless URL and API token, and **To Paperless** shows up in the Android share sheet. Shared files are uploaded directly to paperless, and you see whether paperless consumed each one.
 
+## Architecture
+
+```
+ ┌───────────────── ANDROID PHONE ─────────────────┐
+ │                                                 │
+ │  ┌──────────────┐   share   ┌────────────────┐  │
+ │  │ Any app      │──────────▶│ "To Paperless" │  │
+ │  │ (Files, ...) │           │ installed PWA  │  │
+ │  └──────────────┘           └───┬────────▲───┘  │
+ │                                 │        │      │
+ └─────────────────────────────────┼────────┼──────┘
+                                   │        │
+        (1) app files, HTTPS       │        │ (2) uploads + status, HTTPS
+            once per update        │        │     with API token
+                                   ▼        ▼
+                 ┌───────────────────┐   ┌───────────────────┐
+                 │ HTTPS reverse     │   │ paperless-ngx     │
+                 │ proxy             │   └───────────────────┘
+                 └─────────┬─────────┘
+                           ▼
+                 ┌───────────────────┐
+                 │ paperless-pwa-    │
+                 │ share container   │
+                 │ (static files)    │
+                 └───────────────────┘
+```
+
+The container only serves the app's static files. It never talks to paperless and never sees your token or your files; uploads go directly from the phone to paperless.
+
 ## Requirements and limitations
 
 - **One user, one instance:** one paperless URL and one API token per installed app. No multiple accounts or profiles.
