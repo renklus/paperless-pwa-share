@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovate.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "packageRules": [
+    {
+      "description": "Keep .nvmrc and the Dockerfile on the same Node version, LTS (even) majors only",
+      "matchDepNames": ["node"],
+      "matchManagers": ["nvm", "dockerfile"],
+      "groupName": "node",
+      "allowedVersions": "/^\\d*[02468](\\.|$)/"
+    },
+    {
+      "description": "Group minor and patch updates of npm packages",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm minor and patch"
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ]
+}

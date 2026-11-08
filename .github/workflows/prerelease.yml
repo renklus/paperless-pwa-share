@@ -6,6 +6,7 @@ on:
       - "**.md"
       - UNLICENSE
       - LICENSE-0BSD
+      - renovate.json
 concurrency:
   group: prerelease
   cancel-in-progress: true
