@@ -13,6 +13,7 @@ const accept = [
 
 export default defineConfig({
   define: { "import.meta.env.VITE_APP_VERSION": JSON.stringify(process.env.VITE_APP_VERSION ?? "dev") },
+  build: { sourcemap: true },
   plugins: [
     VitePWA({
       strategies: "injectManifest",
