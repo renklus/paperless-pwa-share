@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovate.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", "docker:pinDigests"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "internalChecksFilter": "strict",

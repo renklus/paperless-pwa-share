@@ -1,4 +1,4 @@
-FROM node:24-alpine AS build
+FROM node:24.22.1-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -7,7 +7,7 @@ ARG APP_VERSION=dev
 ENV VITE_APP_VERSION=$APP_VERSION
 RUN npm run build
 
-FROM joseluisq/static-web-server:2
+FROM joseluisq/static-web-server:2.44.0
 ARG APP_VERSION=dev
 LABEL org.opencontainers.image.title="paperless-pwa-share" \
       org.opencontainers.image.description="Android share-sheet PWA that uploads files to paperless-ngx" \
