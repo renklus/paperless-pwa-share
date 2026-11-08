@@ -2,6 +2,10 @@ name: Prerelease
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "**.md"
+      - UNLICENSE
+      - LICENSE-0BSD
 concurrency:
   group: prerelease
   cancel-in-progress: true
