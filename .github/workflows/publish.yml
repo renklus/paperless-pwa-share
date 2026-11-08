@@ -21,8 +21,8 @@ jobs:
       VERSION: ${{ inputs.version }}
       VITE_APP_VERSION: ${{ inputs.version }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -33,13 +33,13 @@ jobs:
       - name: Zip dist
         run: cd dist && zip -r "../paperless-pwa-share-${VERSION}-dist.zip" .
 
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -48,8 +48,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ inputs.version }},enable=${{ !inputs.prerelease }}
             type=semver,pattern={{major}},value=${{ inputs.version }},enable=${{ !inputs.prerelease }}
             type=raw,value=latest,enable=${{ !inputs.prerelease }}
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v6
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64
