@@ -6,10 +6,14 @@ const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body)
 afterEach(() => vi.unstubAllGlobals());
 
 test("uploadDocument posts the file with the token and returns the task id", async () => {
-  const fetchMock = vi.fn().mockResolvedValue(reply("task-1"));
+  const fetchMock = vi.fn()
+    .mockResolvedValueOnce(reply({ results: [{ id: 3 }, { id: 5 }], next: null }))
+    .mockResolvedValueOnce(reply("task-1"));
   vi.stubGlobal("fetch", fetchMock);
   expect(await uploadDocument(cfg, new File(["x"], "a.pdf"))).toBe("task-1");
-  const [url, init] = fetchMock.mock.calls[0];
+  expect(fetchMock.mock.calls[0][0]).toContain("/api/tags/?is_inbox_tag=true");
+  const [url, init] = fetchMock.mock.calls[1];
+  expect((init.body as FormData).getAll("tags")).toEqual(["3", "5"]);
   expect(url).toBe("https://p.example/api/documents/post_document/");
   expect(init.headers.Authorization).toBe("Token abc");
   expect((init.body as FormData).get("document")).toBeInstanceOf(File);
