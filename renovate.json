@@ -3,7 +3,15 @@
   "extends": ["config:recommended"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
+  "internalChecksFilter": "strict",
   "packageRules": [
+    {
+      "description": "Only propose a new Node major once it is a year old",
+      "matchDepNames": ["node"],
+      "matchManagers": ["nvm", "dockerfile"],
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "365 days"
+    },
     {
       "description": "Keep .nvmrc and the Dockerfile on the same Node version, LTS (even) majors only",
       "matchDepNames": ["node"],
