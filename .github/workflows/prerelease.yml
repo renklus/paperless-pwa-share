@@ -34,3 +34,4 @@ jobs:
     with:
       version: ${{ needs.version.outputs.version }}
       prerelease: true
+      app-name: PPS Test

@@ -11,6 +11,9 @@ const accept = [
   "application/vnd.oasis.opendocument.presentation", "application/rtf", "text/csv",
 ];
 
+// Label on the home screen and in the share sheet (docker build --build-arg APP_NAME=...).
+const appName = process.env.APP_NAME || undefined;
+
 export default defineConfig({
   define: { "import.meta.env.VITE_APP_VERSION": JSON.stringify(process.env.VITE_APP_VERSION ?? "dev") },
   build: { sourcemap: true },
@@ -22,8 +25,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: false,
       manifest: {
-        name: "paperless-pwa-share",
-        short_name: "To Paperless",
+        name: appName ?? "paperless-pwa-share",
+        short_name: appName ?? "To Paperless",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",

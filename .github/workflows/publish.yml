@@ -9,6 +9,11 @@ on:
       prerelease:
         required: true
         type: boolean
+      app-name:
+        description: Custom app name (home screen and share sheet); empty keeps the default
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -20,6 +25,7 @@ jobs:
     env:
       VERSION: ${{ inputs.version }}
       VITE_APP_VERSION: ${{ inputs.version }}
+      APP_NAME: ${{ inputs.app-name }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -54,7 +60,9 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          build-args: APP_VERSION=${{ inputs.version }}
+          build-args: |
+            APP_VERSION=${{ inputs.version }}
+            APP_NAME=${{ inputs.app-name }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

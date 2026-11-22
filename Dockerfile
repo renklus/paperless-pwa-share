@@ -4,21 +4,19 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 ARG APP_VERSION=dev
-ENV VITE_APP_VERSION=$APP_VERSION
+ARG APP_NAME=
+ENV VITE_APP_VERSION=$APP_VERSION \
+    APP_NAME=$APP_NAME
 RUN npm run build
 
-FROM joseluisq/static-web-server:2.44.3-alpine@sha256:b3f7db31db9a68754205b3c0831fe5b066bd1daeb4f45aaa5007847a8c29ede2
+FROM joseluisq/static-web-server:2.44.3@sha256:ccf2d666ffe5f8ef2ec96bc40f07757605998c04b78f7d8fdb98a584dd4f5717
 ARG APP_VERSION=dev
 LABEL org.opencontainers.image.title="paperless-pwa-share" \
       org.opencontainers.image.description="Android share-sheet PWA that uploads files to paperless-ngx" \
       org.opencontainers.image.version="$APP_VERSION" \
       org.opencontainers.image.licenses="Unlicense OR 0BSD"
 COPY --from=build /app/dist /public
-# Writable so docker-entrypoint.sh can apply APP_NAME.
-COPY --from=build --chown=65534:65534 /app/dist/manifest.webmanifest /public/manifest.webmanifest
-COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY sws.toml /sws.toml
 ENV SERVER_CONFIG_FILE=/sws.toml
 USER 65534
 EXPOSE 8080
-ENTRYPOINT ["/docker-entrypoint.sh"]

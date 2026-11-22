@@ -56,13 +56,13 @@ This chapter is AI generated and not tested. See chapter 'Intended use' for test
        restart: unless-stopped
    ```
 
-   Optional: set `APP_NAME` to change the label on the home screen and in the share sheet (default: *To Paperless*). Useful when you run several instances, e.g. one per paperless server:
+   Optional: to change the label on the home screen and in the share sheet (default: *To Paperless*), e.g. when you run several instances, build your own image with `APP_NAME`:
 
    ```sh
-   docker run -d -p 8080:8080 -e APP_NAME="Paperless Home" ghcr.io/renklus/paperless-pwa-share:latest
+   docker build --build-arg APP_NAME="Paperless Home" -t paperless-pwa-share:home https://github.com/renklus/paperless-pwa-share.git
    ```
 
-   The container rewrites `/public/manifest.webmanifest` at startup when `APP_NAME` is set, so that file must be writable (keep this in mind with a read-only root filesystem). Already installed apps pick up a new name when Chrome next updates the app, which can take a day or more. Reinstall for an immediate change.
+   Already installed apps pick up a new name when Chrome next updates the app, which can take a day or more. Reinstall for an immediate change.
 
 2. **Put it behind an HTTPS reverse proxy**, for example with Caddy (also configure TLS, paperless-pwa-share does not support HTTPS, but it is required for the sharing menu to work):
 
@@ -100,7 +100,7 @@ This chapter is AI generated and not tested. See chapter 'Intended use' for test
 
 ## Updating
 
-Pull a new image; the app updates itself the next time it is opened. Tags: `latest` is the newest stable release, `X.Y.Z`, `X.Y` and `X` pin a release line, and `dev` is the latest build of `main` (prerelease).
+Pull a new image; the app updates itself the next time it is opened. Tags: `latest` is the newest stable release, `X.Y.Z`, `X.Y` and `X` pin a release line, and `dev` is the latest build of `main` (prerelease, named *PPS Test* so you can tell it apart from a release instance on the phone).
 
 ## Application maintenance
 
