@@ -56,6 +56,14 @@ This chapter is AI generated and not tested. See chapter 'Intended use' for test
        restart: unless-stopped
    ```
 
+   Optional: set `APP_NAME` to change the label on the home screen and in the share sheet (default: *To Paperless*). Useful when you run several instances, e.g. one per paperless server:
+
+   ```sh
+   docker run -d -p 8080:8080 -e APP_NAME="Paperless Home" ghcr.io/renklus/paperless-pwa-share:latest
+   ```
+
+   The container rewrites `/public/manifest.webmanifest` at startup when `APP_NAME` is set, so that file must be writable (keep this in mind with a read-only root filesystem). Already installed apps pick up a new name when Chrome next updates the app, which can take a day or more. Reinstall for an immediate change.
+
 2. **Put it behind an HTTPS reverse proxy**, for example with Caddy (also configure TLS, paperless-pwa-share does not support HTTPS, but it is required for the sharing menu to work):
 
    ```
